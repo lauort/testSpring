@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+		http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+		http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+
+    <changeSet id="createBrandsTable" author="liquibase">
+        <createTable tableName="BRANDS">
+            <column name="ID" type="IDENTITY">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="NAME" type="varchar(2000)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="createPricesTable" author="liquibase">
+        <createTable tableName="PRICES">
+            <column name="ID" type="IDENTITY">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="BRAND_ID" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="START_DATE" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="END_DATE" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PRICE_LIST" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PRODUCT_ID" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PRIORITY" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PRICE" type="DECIMAL(10, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CURR" type="varchar(5)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="brand_id"
+                                 baseTableName="PRICES"
+                                 constraintName="fk_prices_brand_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="BRANDS"/>
+    </changeSet>
+
+    <changeSet id="addTesData" author="liquibase" context="integration">
+        <insert tableName="BRANDS">
+            <column name="id" value="1"/>
+            <column name="name" value="ZARA" />
+        </insert>
+        <loadData encoding="UTF-8"
+                  file="db/data/prices.csv"
+                  separator=";"
+                  tableName="PRICES">
+        </loadData>
+    </changeSet>
+
+
+
+</databaseChangeLog>
